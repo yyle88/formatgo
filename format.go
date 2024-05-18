@@ -8,24 +8,11 @@ import (
 
 	"github.com/yyle88/erero"
 	"github.com/yyle88/formatgo/internal/utils"
-	"github.com/yyle88/zaplog"
-	"go.uber.org/zap"
 	"golang.org/x/tools/imports"
 )
 
-// FormatBytes 格式化golang的源代码，当出错时依然返回中间某个阶段的代码，这样出错时返回值也还是可以用的
-func FormatBytes(code []byte) ([]byte, error) {
-	options := &Options{
-		ImportsOptions: GetImportsOptions(),
-	}
-	return Format(code, options)
-}
-
-type Options struct {
-	ImportsOptions *imports.Options
-}
-
-func Format(code []byte, options *Options) ([]byte, error) {
+// FormatBytesWithOptions 格式化golang的源代码，当出错时依然返回中间某个阶段的代码，这样出错时返回值也还是可以用的
+func FormatBytesWithOptions(code []byte, options *Options) ([]byte, error) {
 	newSrc, err := format.Source(code)
 	if err != nil {
 		return code, erero.WithMessage(err, "wrong")
@@ -40,82 +27,72 @@ func Format(code []byte, options *Options) ([]byte, error) {
 	return newSrc, nil
 }
 
-func FormatCode(code string) (string, error) {
-	return FormatSource(code)
-}
-
-func FormatSource(code string) (string, error) {
-	newSrc, err := FormatBytes([]byte(code))
+// FormatCodeWithOptions 格式化源代码字符串，当出错时依然返回中间某个阶段的代码，这样出错时返回值也还是可以用的
+func FormatCodeWithOptions(code string, options *Options) (string, error) {
+	newSrc, err := FormatBytesWithOptions([]byte(code), options)
 	if err != nil {
 		return string(newSrc), erero.WithMessage(err, "wrong")
 	}
 	return string(newSrc), nil
 }
 
-func FormatFile(path string) error {
-	code, err := os.ReadFile(path)
+// FormatSourceWithOptions 跟 FormatCodeWithOptions 完全是一样的，只是函数名称不同，看外部调用者喜欢哪个名称吧
+func FormatSourceWithOptions(code string, options *Options) (string, error) {
+	return FormatCodeWithOptions(code, options)
+}
+
+// FormatFileWithOptions 格式化源代码文件
+func FormatFileWithOptions(path string, options *Options) error {
+	source, err := os.ReadFile(path)
 	if err != nil {
 		return erero.WithMessage(err, "wrong")
 	}
-	newSrc, err := FormatBytes(code)
+	newSrc, err := FormatBytesWithOptions(source, options)
 	if err != nil {
 		return erero.WithMessage(err, "wrong")
 	}
-	if bytes.Equal(code, newSrc) {
+	if bytes.Equal(source, newSrc) {
 		return nil
 	}
-	return utils.WriteBytes(path, newSrc)
+	return utils.WriteFile(path, newSrc)
 }
 
-func FormatRoot(root string) error {
-	return FormatRootChoose(root, chooseFunc)
+// FormatRootWithOptions 格式化整个目录以及其子目录下的所有go文件
+func FormatRootWithOptions(root string, options *RootOptions) error {
+	return formatRootWithOptions(root, 0, options)
 }
 
-func FormatRootChoose(root string, choose func(name string, path string) bool) error {
-	var suffixes = []string{".go", ".GO"}
-	if err := utils.FilepathWalkOnFilesWithSuffixes(root, suffixes, func(path string, info os.FileInfo) error {
-		name := info.Name()
-		if choose(name, path) {
-			if err := FormatFile(path); err != nil {
-				return erero.WithMessage(err, "wrong")
-			}
-		}
-		return nil
-	}); err != nil {
-		return erero.WithMessage(err, "wrong")
-	}
-	return nil
+// FormatProjectWithOptions 格式化整个项目里所有的go文件
+func FormatProjectWithOptions(projectRoot string, options *RootOptions) error {
+	return formatRootWithOptions(projectRoot, 0, options)
 }
 
-func chooseFunc(name string, path string) bool {
-	zaplog.LOG.Debug("format", zap.String("path", path), zap.String("name", name))
-	return true
-}
-
-// FormatProject 除了根目录的隐藏文件，格式化其余全部代码
-func FormatProject(projectPath string) error {
-	return FormatProjectChoose(projectPath, chooseFunc)
-}
-
-func FormatProjectChoose(projectPath string, choose func(name string, path string) bool) error {
-	mapNamePath, err := utils.LsMapNamePath(projectPath)
+func formatRootWithOptions(root string, depth int, options *RootOptions) error {
+	mapNamePath, err := utils.LsMapNamePath(root)
 	if err != nil {
 		return erero.WithMessage(err, "wrong")
 	}
 	for name, path := range mapNamePath {
 		if strings.HasPrefix(name, ".") {
-			continue //跳过不可见的目录，比如.git目录和.idea目录
+			if depth < options.MinSkipHiddenDepth { //在若干层以内跳过隐藏目录
+				continue //跳过不可见的目录，比如.git目录和.idea目录
+			}
 		}
+
 		if utils.IsRootExist(path) {
-			if err := FormatRootChoose(path, choose); err != nil {
-				return erero.WithMessage(err, "wrong")
+			if options.FilterRootFunction(depth, path, name) {
+				if err := formatRootWithOptions(path, depth+1, options); err != nil {
+					return erero.WithMessage(err, "wrong")
+				}
 			}
-			continue
-		} else if utils.IsFileExist(path) && strings.HasSuffix(name, ".go") {
-			if err := FormatFile(path); err != nil {
-				return erero.WithMessage(err, "wrong")
+		} else if utils.IsFileExist(path) {
+			if strings.HasSuffix(name, ".go") || utils.IsStringHasAnySuffix(name, options.FileNameSuffixes) {
+				if options.FilterFileFunction(depth, path, name) {
+					if err := FormatFileWithOptions(path, options.FileOptions); err != nil {
+						return erero.WithMessage(err, "wrong")
+					}
+				}
 			}
-			continue
 		}
 	}
 	return nil

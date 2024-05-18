@@ -8,7 +8,7 @@ import (
 	"github.com/yyle88/erero"
 )
 
-func WriteBytes(path string, data []byte) error {
+func WriteFile(path string, data []byte) error {
 	return os.WriteFile(path, data, 0644)
 }
 
@@ -44,27 +44,6 @@ func Ls(root string) (names []string, err error) {
 		names = append(names, info.Name())
 	}
 	return names, nil
-}
-
-func FilepathWalkOnFilesWithSuffixes(root string, suffixes []string, run func(path string, info os.FileInfo) error) (err error) {
-	err = filepath.Walk(root,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return erero.WithMessage(err, "wrong")
-			}
-			if info == nil {
-				return nil
-			}
-			if info.IsDir() {
-				return nil
-			}
-			if IsStringHasAnySuffix(path, suffixes) {
-				return run(path, info)
-			}
-			return nil
-		},
-	)
-	return err
 }
 
 func IsStringHasAnySuffix(s string, suffixes []string) bool {
