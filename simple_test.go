@@ -38,16 +38,19 @@ func TestFormatFile(t *testing.T) {
 	_, path, _, ok := runtime.Caller(0)
 	require.True(t, ok)
 	t.Log(path)
-	require.NoError(t, FormatFile(path))
+	require.True(t, strings.HasSuffix(path, "/formatgo/simple_test.go")) //需要确保就是这个文件
+
+	require.NoError(t, FormatFile(path)) //把该文件格式化
 }
 
 func TestFormatProject(t *testing.T) {
 	_, path, _, ok := runtime.Caller(0)
 	require.True(t, ok)
 	t.Log(path)
+	require.True(t, strings.HasSuffix(path, "/formatgo/simple_test.go"))
 	root := filepath.Dir(path)
 	t.Log(root)
 	require.True(t, strings.HasSuffix(root, "/formatgo")) //这样99.99%能够确保目录路径是正确的
-	//既然已经开发了项目格式化的代码，就把本项目自己格式化下吧
-	require.NoError(t, FormatProject(root))
+
+	require.NoError(t, FormatProject(root)) //把本项目格式化
 }
