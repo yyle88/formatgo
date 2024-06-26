@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"go/format"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/yyle88/erero"
@@ -86,7 +87,7 @@ func formatRootWithOptions(root string, depth int, options *RootOptions) error {
 				}
 			}
 		} else if utils.IsFileExist(path) {
-			if strings.HasSuffix(name, ".go") || utils.IsStringHasAnySuffix(name, options.FileNameSuffixes) {
+			if filepath.Ext(name) == ".go" || utils.IsStringHasAnySuffix(name, options.FileNameSuffixes) {
 				if options.FilterFileFunction(depth, path, name) {
 					if err := FormatFileWithOptions(path, options.FileOptions); err != nil {
 						return erero.WithMessage(err, "wrong")
