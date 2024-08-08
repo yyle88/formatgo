@@ -69,7 +69,7 @@ func FormatProjectWithOptions(projectRoot string, options *RootOptions) error {
 }
 
 func formatRootWithOptions(root string, depth int, options *RootOptions) error {
-	mapNamePath, err := utils.LsMapNamePath(root)
+	mapNamePath, err := utils.LsMapName2Path(root)
 	if err != nil {
 		return erero.WithMessage(err, "wrong")
 	}
@@ -87,7 +87,7 @@ func formatRootWithOptions(root string, depth int, options *RootOptions) error {
 				}
 			}
 		} else if utils.IsFileExist(path) {
-			if filepath.Ext(name) == ".go" || utils.IsStringHasAnySuffix(name, options.FileNameSuffixes) {
+			if filepath.Ext(name) == ".go" || utils.HasAnySuffix(name, options.FileNameSuffixes) {
 				if options.FilterFileFunction(depth, path, name) {
 					if err := FormatFileWithOptions(path, options.FileOptions); err != nil {
 						return erero.WithMessage(err, "wrong")

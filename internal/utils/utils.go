@@ -22,7 +22,7 @@ func IsFileExist(path string) bool {
 	return !os.IsNotExist(err) && info != nil && !info.IsDir() //这是简化版的就不要考虑其它错误啦
 }
 
-func LsMapNamePath(root string) (map[string]string, error) {
+func LsMapName2Path(root string) (map[string]string, error) {
 	names, err := Ls(root)
 	if err != nil {
 		return nil, erero.WithMessage(err, "wrong")
@@ -46,7 +46,7 @@ func Ls(root string) (names []string, err error) {
 	return names, nil
 }
 
-func IsStringHasAnySuffix(s string, suffixes []string) bool {
+func HasAnySuffix(s string, suffixes []string) bool {
 	for _, suffix := range suffixes {
 		if strings.HasSuffix(s, suffix) {
 			return true
