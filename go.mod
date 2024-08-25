@@ -4,7 +4,7 @@ go 1.22.3
 
 require (
 	github.com/stretchr/testify v1.9.0
-	github.com/yyle88/erero v1.0.8
+	github.com/yyle88/erero v1.0.9
 	github.com/yyle88/zaplog v0.0.7
 	go.uber.org/zap v1.27.0
 	golang.org/x/tools v0.24.0
