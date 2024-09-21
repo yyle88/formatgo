@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/yyle88/done"
 	"github.com/yyle88/erero"
 	"github.com/yyle88/formatgo/internal/utils"
 	"golang.org/x/tools/imports"
@@ -80,13 +81,13 @@ func formatRootWithOptions(root string, depth int, options *RootOptions) error {
 			}
 		}
 
-		if utils.IsRootExist(path) {
+		if done.VBE(utils.IsRootExists(path)).Value() {
 			if options.FilterRootFunction(depth, path, name) {
 				if err := formatRootWithOptions(path, depth+1, options); err != nil {
 					return erero.WithMessage(err, "wrong")
 				}
 			}
-		} else if utils.IsFileExist(path) {
+		} else if done.VBE(utils.IsFileExists(path)).Value() {
 			if filepath.Ext(name) == ".go" || utils.HasAnySuffix(name, options.FileNameSuffixes) {
 				if options.FilterFileFunction(depth, path, name) {
 					if err := FormatFileWithOptions(path, options.FileOptions); err != nil {

@@ -12,14 +12,26 @@ func WriteFile(path string, data []byte) error {
 	return os.WriteFile(path, data, 0644)
 }
 
-func IsRootExist(path string) bool {
+func IsRootExists(path string) (bool, error) {
 	info, err := os.Stat(path)
-	return !os.IsNotExist(err) && info != nil && info.IsDir() //这是简化版的就不要考虑其它错误啦
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil // 路径不存在
+		}
+		return false, erero.Wro(err) // 其他的错误
+	}
+	return info.IsDir(), nil
 }
 
-func IsFileExist(path string) bool {
+func IsFileExists(path string) (bool, error) {
 	info, err := os.Stat(path)
-	return !os.IsNotExist(err) && info != nil && !info.IsDir() //这是简化版的就不要考虑其它错误啦
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false, nil // 路径不存在
+		}
+		return false, erero.Wro(err) // 其他的错误
+	}
+	return !info.IsDir(), nil
 }
 
 func LsMapName2Path(root string) (map[string]string, error) {
