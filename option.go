@@ -9,12 +9,16 @@ import (
 )
 
 type Options struct {
-	ImportsOptions *imports.Options
+	ImportsOptions        *imports.Options
+	IsCleanImportNewlines bool
+	IsProcessFormatImport bool
 }
 
 func NewOptions() *Options {
 	return &Options{
-		ImportsOptions: GetImportsOptions(),
+		ImportsOptions:        GetImportsOptions(),
+		IsCleanImportNewlines: true,
+		IsProcessFormatImport: true,
 	}
 }
 
