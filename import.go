@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/yyle88/erero"
+	"github.com/yyle88/formatgo/internal/utils"
 	"github.com/yyle88/syntaxgo/syntaxgo_ast"
 	"golang.org/x/tools/imports"
 )
@@ -27,7 +28,7 @@ func CleanImportNewlinesInFile(path string) error {
 	if err != nil {
 		return erero.Wro(err)
 	}
-	err = os.WriteFile(path, newSrc, 0666)
+	err = utils.WriteFileKeepFileMode(path, newSrc)
 	if err != nil {
 		return erero.Wro(err)
 	}

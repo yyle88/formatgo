@@ -66,7 +66,7 @@ func FormatFileWithOptions(path string, options *Options) error {
 	if bytes.Equal(source, newSrc) {
 		return nil
 	}
-	return utils.WriteFile(path, newSrc)
+	return utils.WriteFileKeepFileMode(path, newSrc)
 }
 
 // FormatRootWithOptions 格式化整个目录以及其子目录下的所有go文件
