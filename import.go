@@ -1,6 +1,7 @@
 package formatgo
 
 import (
+	"os"
 	"strings"
 
 	"github.com/yyle88/erero"
@@ -15,6 +16,22 @@ func GetImportsOptions() *imports.Options {
 		Comments:  true,
 		Fragment:  true,
 	}
+}
+
+func CleanImportNewlinesInFile(path string) error {
+	source, err := os.ReadFile(path)
+	if err != nil {
+		return erero.Wro(err)
+	}
+	newSrc, err := CleanImportNewlines(source)
+	if err != nil {
+		return erero.Wro(err)
+	}
+	err = os.WriteFile(path, newSrc, 0666)
+	if err != nil {
+		return erero.Wro(err)
+	}
+	return nil
 }
 
 // CleanImportNewlines processes the provided source code in byte form,
