@@ -5,7 +5,7 @@ go 1.22.6
 require (
 	github.com/kr/pretty v0.3.1
 	github.com/stretchr/testify v1.9.0
-	github.com/yyle88/done v1.0.12
+	github.com/yyle88/done v1.0.13
 	github.com/yyle88/erero v1.0.11
 	github.com/yyle88/syntaxgo v0.0.30
 	github.com/yyle88/zaplog v0.0.13

@@ -91,13 +91,13 @@ func formatRootWithOptions(root string, depth int, options *RootOptions) error {
 			}
 		}
 
-		if done.VBE(utils.IsRootExists(path)).Value() {
+		if done.VBE(utils.IsRootExists(path)).Done() {
 			if options.FilterRootFunction(depth, path, name) {
 				if err := formatRootWithOptions(path, depth+1, options); err != nil {
 					return erero.Wro(err)
 				}
 			}
-		} else if done.VBE(utils.IsFileExists(path)).Value() {
+		} else if done.VBE(utils.IsFileExists(path)).Done() {
 			if filepath.Ext(name) == ".go" || utils.HasAnySuffix(name, options.FileNameSuffixes) {
 				if options.FilterFileFunction(depth, path, name) {
 					if err := FormatFileWithOptions(path, options.FileOptions); err != nil {
