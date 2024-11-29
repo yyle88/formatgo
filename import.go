@@ -7,6 +7,7 @@ import (
 	"github.com/yyle88/erero"
 	"github.com/yyle88/formatgo/internal/utils"
 	"github.com/yyle88/syntaxgo/syntaxgo_ast"
+	"github.com/yyle88/syntaxgo/syntaxgo_astnode"
 	"golang.org/x/tools/imports"
 )
 
@@ -40,19 +41,21 @@ func CleanImportNewlinesInFile(path string) error {
 // empty lines within the import statements, ensuring that there is at
 // most one newline between them.
 func CleanImportNewlines(source []byte) ([]byte, error) {
-	astFile, err := syntaxgo_ast.NewAstFromSource(source)
+	astBundle, err := syntaxgo_ast.NewAstBundleV1(source)
 	if err != nil {
 		return nil, erero.Wro(err)
 	}
+	astFile, _ := astBundle.GetBundle()
+
 	if len(astFile.Imports) == 0 {
 		return source, nil
 	}
 
-	node := syntaxgo_ast.NewNode(
+	node := syntaxgo_astnode.NewNode(
 		astFile.Imports[0].Pos(),
 		astFile.Imports[len(astFile.Imports)-1].End(),
 	)
-	oldImports := node.GetCode(source)
+	oldImports := node.GetText(source)
 	if oldImports == "" {
 		return source, nil
 	}
@@ -61,7 +64,7 @@ func CleanImportNewlines(source []byte) ([]byte, error) {
 		return source, nil
 	}
 
-	return syntaxgo_ast.ChangeNodeBytes(source, node, []byte(newImports)), nil
+	return syntaxgo_astnode.ChangeNodeCode(source, node, []byte(newImports)), nil
 }
 
 // condenseNewlines takes a string input and removes consecutive empty lines,

@@ -5,5 +5,5 @@
 
 Give me stars. Thank you!!!
 
-## see stars
+## See stars
 [![see stars](https://starchart.cc/yyle88/formatgo.svg?variant=adaptive)](https://starchart.cc/yyle88/formatgo)
