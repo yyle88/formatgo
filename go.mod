@@ -7,7 +7,7 @@ require (
 	github.com/stretchr/testify v1.10.0
 	github.com/yyle88/done v1.0.18
 	github.com/yyle88/erero v1.0.14
-	github.com/yyle88/syntaxgo v0.0.33
+	github.com/yyle88/syntaxgo v0.0.35
 	github.com/yyle88/zaplog v0.0.16
 	go.uber.org/zap v1.27.0
 	golang.org/x/tools v0.27.0
