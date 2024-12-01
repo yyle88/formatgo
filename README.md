@@ -9,6 +9,10 @@
 
 `formatgo` is a Go package that provides utilities for formatting Go source code, whether it's in a byte slice, string, or a file, and even for entire directories containing Go files.
 
+## CHINESE README
+
+[中文说明](README.zh.md)
+
 ## Installation
 
 To install the `formatgo` package, you can run the following command:

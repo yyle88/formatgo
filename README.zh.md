@@ -2,6 +2,10 @@
 
 `formatgo` 是一个 Go 包，用于格式化 Go 源代码，无论是字节切片、字符串还是文件，甚至是包含 Go 文件的整个目录。
 
+## 英文文档
+
+[English README](README.md)
+
 ## 安装
 
 你可以通过以下命令安装 `formatgo` 包：
