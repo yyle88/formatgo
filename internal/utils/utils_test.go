@@ -1,16 +1,11 @@
 package utils
 
 import (
-	"runtime"
 	"testing"
 
-	"github.com/stretchr/testify/require"
+	"github.com/yyle88/runpath"
 )
 
-func TestGetFileModePerm(t *testing.T) {
-	_, path, _, ok := runtime.Caller(0)
-	require.True(t, ok)
-	t.Log(path)
-
-	t.Log(GetFileModePerm(path))
+func TestGetFileMode(t *testing.T) {
+	t.Log(GetFileMode(runpath.Path()))
 }

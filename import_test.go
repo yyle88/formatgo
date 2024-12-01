@@ -7,5 +7,5 @@ import (
 )
 
 func TestGetImportsOptions(t *testing.T) {
-	_, _ = pretty.Println(GetImportsOptions())
+	_, _ = pretty.Println(NewImportsOptions())
 }

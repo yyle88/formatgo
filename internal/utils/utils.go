@@ -10,11 +10,11 @@ import (
 	"go.uber.org/zap"
 )
 
-func WriteFileKeepFileMode(path string, data []byte) error {
-	return os.WriteFile(path, data, GetFileModePerm(path))
+func WriteFileKeepMode(path string, data []byte) error {
+	return os.WriteFile(path, data, GetFileMode(path))
 }
 
-func GetFileModePerm(path string) os.FileMode {
+func GetFileMode(path string) os.FileMode {
 	stat, err := os.Stat(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -49,7 +49,7 @@ func IsFileExists(path string) (bool, error) {
 	return !info.IsDir(), nil
 }
 
-func LsMapName2Path(root string) (map[string]string, error) {
+func LsAsMap(root string) (map[string]string, error) {
 	names, err := Ls(root)
 	if err != nil {
 		return nil, erero.WithMessage(err, "wrong")

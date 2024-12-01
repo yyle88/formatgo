@@ -52,5 +52,5 @@ func TestFormatProject(t *testing.T) {
 	t.Log(root)
 	require.True(t, strings.HasSuffix(root, "/formatgo")) //这样99.99%能够确保目录路径是正确的
 
-	require.NoError(t, FormatProject(root)) //把本项目格式化
+	require.NoError(t, FormatRoot(root)) //把本项目格式化
 }

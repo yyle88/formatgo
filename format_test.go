@@ -16,14 +16,14 @@ func TestFormatBytesWithOptions(t *testing.T) {
 		)
 		
 		func TestGetImportsOptions(t *testing.T) {
-			_ ,_ = pretty.Println(GetImportsOptions())
+			_ ,_ = pretty.Println(NewImportsOptions())
 		}
 		`
 
-	newSrc, err := FormatBytesWithOptions([]byte(code), NewOptions())
+	source, err := FormatBytesWithOptions([]byte(code), NewOptions())
 	require.NoError(t, err)
 
-	t.Log(string(newSrc))
+	t.Log(string(source))
 
 	const want = `package formatgo
 
@@ -34,8 +34,8 @@ import (
 )
 
 func TestGetImportsOptions(t *testing.T) {
-	_, _ = pretty.Println(GetImportsOptions())
+	_, _ = pretty.Println(NewImportsOptions())
 }
 `
-	require.Equal(t, want, string(newSrc))
+	require.Equal(t, want, string(source))
 }
