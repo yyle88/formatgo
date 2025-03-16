@@ -20,29 +20,29 @@ import (
 func FormatBytesWithOptions(code []byte, options *Options) ([]byte, error) {
 	// Step 1: Format source code
 	// 步骤 1：格式化源代码
-	if newSrc, err := format.Source(code); err != nil {
+	if newSource, err := format.Source(code); err != nil {
 		return code, erero.Wro(err) // Return the original code if an error occurs // 如果发生错误，返回原始代码
 	} else {
-		code = newSrc // Save the successful intermediate result // 保存格式化后的中间结果
+		code = newSource // Save the successful intermediate result // 保存格式化后的中间结果
 	}
 
 	// Step 2: Condense import statements if enabled
 	// 步骤 2：如果启用，合并导入语句
 	if options.CondenseImport {
-		if newSrc, err := CleanCodeImportNewlines(code); err != nil {
+		if newSource, err := CleanCodeImportNewlines(code); err != nil {
 			return code, erero.Wro(err)
 		} else {
-			code = newSrc // Save the successful intermediate result // 保存格式化后的导入语句中间结果
+			code = newSource // Save the successful intermediate result // 保存格式化后的导入语句中间结果
 		}
 	}
 
 	// Step 3: Format imports if enabled
 	// 步骤 3：如果启用，格式化导入语句
 	if options.IsFormatImport {
-		if newSrc, err := imports.Process("", code, options.ImportsOptions); err != nil {
+		if newSource, err := imports.Process("", code, options.ImportsOptions); err != nil {
 			return code, erero.Wro(err)
 		} else {
-			code = newSrc // Save the successful intermediate result // 保存格式化后的导入语句中间结果
+			code = newSource // Save the successful intermediate result // 保存格式化后的导入语句中间结果
 		}
 	}
 	return code, nil
@@ -53,11 +53,11 @@ func FormatBytesWithOptions(code []byte, options *Options) ([]byte, error) {
 // FormatCodeWithOptions 格式化 Go 的源代码（以字符串形式提供）。
 // 即使在格式化期间发生错误，也会返回中间结果代码（字符串形式）。
 func FormatCodeWithOptions(code string, options *Options) (string, error) {
-	newSrc, err := FormatBytesWithOptions([]byte(code), options)
+	newSource, err := FormatBytesWithOptions([]byte(code), options)
 	if err != nil {
-		return string(newSrc), erero.Wro(err) // Return intermediate result even on error // 即使发生错误，仍然返回中间结果
+		return string(newSource), erero.Wro(err) // Return intermediate result even on error // 即使发生错误，仍然返回中间结果
 	}
-	return string(newSrc), nil
+	return string(newSource), nil
 }
 
 // FormatFileWithOptions formats a Go source code file.
@@ -69,16 +69,16 @@ func FormatFileWithOptions(path string, options *Options) error {
 	if err != nil {
 		return erero.Wro(err)
 	}
-	newSrc, err := FormatBytesWithOptions(source, options)
+	newSource, err := FormatBytesWithOptions(source, options)
 	if err != nil {
 		return erero.Wro(err)
 	}
 	// Skip writing if no changes are detected
 	// 如果没有变化，跳过写入
-	if bytes.Equal(source, newSrc) {
+	if bytes.Equal(source, newSource) {
 		return nil
 	}
-	return utils.WriteFileKeepMode(path, newSrc) // Write the formatted content
+	return utils.WriteFileKeepMode(path, newSource) // Write the formatted content
 	// 写入格式化后的内容
 }
 
