@@ -87,14 +87,14 @@ func FormatFileWithOptions(path string, options *Options) error {
 // FormatRootWithOptions 格式化指定目录及其子目录下的所有 Go 文件。
 // 它递归处理每个目录，并根据提供的选项进行格式化。
 func FormatRootWithOptions(root string, options *RootOptions) error {
-	return formatRootRecursive(root, 0, options)
+	return recursiveFormat(root, 0, options)
 }
 
-// formatRootRecursive is a helper function for FormatRootWithOptions.
+// recursiveFormat is a helper function for FormatRootWithOptions.
 // It recursively processes directories and files based on the given options.
-// formatRootRecursive 是 FormatRootWithOptions 的辅助函数。
+// recursiveFormat 是 FormatRootWithOptions 的辅助函数。
 // 它根据给定的选项递归处理目录和文件。
-func formatRootRecursive(root string, depth int, options *RootOptions) error {
+func recursiveFormat(root string, depth int, options *RootOptions) error {
 	mapNamePath, err := utils.LsAsMap(root)
 	if err != nil {
 		return erero.Wro(err)
@@ -105,15 +105,15 @@ func formatRootRecursive(root string, depth int, options *RootOptions) error {
 		// 根据深度跳过隐藏的目录/文件
 		if strings.HasPrefix(name, ".") {
 			if depth < options.SkipHiddenDepth {
-				continue // Skip hidden directories like .git or .idea // 跳过隐藏的目录，如 .git 或 .idea
+				continue // Skip hidden directories(.git / .idea) // 跳过隐藏的目录(.git / .idea)
 			}
 		}
 
 		// Process subdirectories
-		// 处理子目录
+		// 接着处理子目录
 		if done.VBE(utils.IsRootExists(path)).Done() {
 			if options.FilterRoot(depth, path, name) {
-				if err := formatRootRecursive(path, depth+1, options); err != nil {
+				if err := recursiveFormat(path, depth+1, options); err != nil {
 					return erero.Wro(err)
 				}
 			}

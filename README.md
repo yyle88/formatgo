@@ -106,9 +106,9 @@ func main() {fmt.Println("Hello, world!")}`
 
 ## Support
 
-Welcome to contribute to this project by submitting pull requests or reporting issues.
+Welcome to contribute to this project by submitting pull requests and reporting issues.
 
-If you find this package helpful, give it a star on GitHub!
+If you find this package valuable, give me some stars on GitHub! Thank you!!!
 
 **Thank you for your support!**
 
@@ -116,6 +116,6 @@ If you find this package helpful, give it a star on GitHub!
 
 Give me stars. Thank you!!!
 
-## Starring
+## GitHub Stars
 
 [![starring](https://starchart.cc/yyle88/formatgo.svg?variant=adaptive)](https://starchart.cc/yyle88/formatgo)
