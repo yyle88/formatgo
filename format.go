@@ -78,8 +78,14 @@ func FormatFileWithOptions(path string, options *Options) error {
 	if bytes.Equal(source, newSource) {
 		return nil
 	}
-	return utils.WriteFileKeepMode(path, newSource) // Write the formatted content
-	// 写入格式化后的内容
+	// Write the formatted content
+	// 把格式化后的内容写回原文件里
+	// when file exist WriteFile truncates it before writing, without changing permissions.
+	err = os.WriteFile(path, newSource, 0644)
+	if err != nil {
+		return erero.Wro(err)
+	}
+	return nil
 }
 
 // FormatRootWithOptions formats all Go files in a directory and its subdirectories.

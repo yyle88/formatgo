@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/yyle88/erero"
-	"github.com/yyle88/formatgo/internal/utils"
 	"github.com/yyle88/syntaxgo/syntaxgo_ast"
 	"github.com/yyle88/syntaxgo/syntaxgo_astnode"
 	"golang.org/x/tools/imports"
@@ -41,7 +40,8 @@ func CleanFileImportNewlines(path string) error {
 
 	// Write the new source code back to the file
 	// 将新源代码写回文件
-	err = utils.WriteFileKeepMode(path, newSrc)
+	// (when file exist) WriteFile truncates it before writing, without changing permissions.
+	err = os.WriteFile(path, newSrc, 0644)
 	if err != nil {
 		return erero.Wro(err) // 返回写入文件时的错误
 	}

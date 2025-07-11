@@ -6,26 +6,7 @@ import (
 	"strings"
 
 	"github.com/yyle88/erero"
-	"github.com/yyle88/zaplog"
-	"go.uber.org/zap"
 )
-
-func WriteFileKeepMode(path string, data []byte) error {
-	return os.WriteFile(path, data, GetFileMode(path))
-}
-
-func GetFileMode(path string) os.FileMode {
-	stat, err := os.Stat(path)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return os.FileMode(0644)
-		} else {
-			zaplog.LOG.Warn("stat wrong", zap.String("path", path), zap.Error(err))
-			return os.FileMode(0644)
-		}
-	}
-	return stat.Mode()
-}
 
 func IsRootExists(path string) (bool, error) {
 	info, err := os.Stat(path)
