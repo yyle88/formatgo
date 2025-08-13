@@ -33,7 +33,7 @@ func CleanFileImportNewlines(path string) error {
 
 	// Condense the import lines to remove empty lines
 	// 压缩导入语句以去除空行
-	newSrc, err := CleanCodeImportNewlines(source)
+	newSource, err := CleanCodeImportNewlines(source)
 	if err != nil {
 		return erero.Wro(err) // 返回压缩导入行时的错误
 	}
@@ -41,11 +41,10 @@ func CleanFileImportNewlines(path string) error {
 	// Write the new source code back to the file
 	// 将新源代码写回文件
 	// (when file exist) WriteFile truncates it before writing, without changing permissions.
-	err = os.WriteFile(path, newSrc, 0644)
+	err = os.WriteFile(path, newSource, 0644)
 	if err != nil {
 		return erero.Wro(err) // 返回写入文件时的错误
 	}
-
 	return nil
 }
 

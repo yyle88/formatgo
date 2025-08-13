@@ -6,10 +6,10 @@ require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
 	github.com/kr/pretty v0.3.1
 	github.com/stretchr/testify v1.10.0
-	github.com/yyle88/done v1.0.26
+	github.com/yyle88/done v1.0.27
 	github.com/yyle88/erero v1.0.23
-	github.com/yyle88/must v0.0.25
-	github.com/yyle88/rese v0.0.10
+	github.com/yyle88/must v0.0.26
+	github.com/yyle88/rese v0.0.11
 	github.com/yyle88/runpath v1.0.23
 	github.com/yyle88/syntaxgo v0.0.53
 	github.com/yyle88/zaplog v0.0.26
